@@ -317,6 +317,41 @@
             color: var(--text);
         }
 
+        .dream-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            min-height: 2px;
+            margin-bottom: 4px;
+        }
+
+        .dream-song-chip {
+            background: rgba(187, 134, 252, 0.15);
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dream-song-chip .remove-chip {
+            cursor: pointer;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.1rem;
+            line-height: 1;
+            padding: 0 4px;
+        }
+        
+        .dream-song-chip .remove-chip:hover {
+            color: #FF6B6B;
+        }
+
         .probability-result {
             margin-top: 16px;
             padding: 16px;
@@ -893,6 +928,146 @@
                 transform: translateY(100vh) rotate(720deg);
             }
         }
+
+        /* ============ OVERLAY MODAL ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform var(--transition);
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-content h3 {
+            margin-bottom: 8px;
+            color: var(--gold);
+        }
+        .modal-content p {
+            margin-bottom: 20px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        .modal-select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 5, 30, 0.8);
+            border: 1px solid var(--border-card);
+            color: var(--text);
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background var(--transition);
+        }
+        .btn-save {
+            background: var(--accent);
+            color: #111;
+        }
+        .btn-save:hover {
+            background: var(--accent-glow);
+        }
+        .btn-skip {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+        .btn-skip:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ============ REPLACEMENT UI ============ */
+        #modalViewReplace {
+            display: none;
+        }
+        .replace-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .btn-replace-song {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            color: var(--text);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            text-align: left;
+            transition: all var(--transition);
+        }
+        .btn-replace-song:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+        }
+
+        /* ============ TOUR HISTORY ============ */
+        .history-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .history-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+        .history-songs {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 
@@ -924,12 +1099,14 @@
                     Will I Hear My Favorite Song?
                 </div>
 
-                <select id="dreamSongSelect" class="dream-select" aria-label="Select your dream song">
-                    <option value="">— Select your dream song —</option>
+                <select id="dreamSongSelect" class="dream-select" aria-label="Add a dream song">
+                    <option value="">— Add a dream song —</option>
                 </select>
 
+                <div id="dreamSongChips" class="dream-chips-container"></div>
+
                 <div class="probability-result" id="probabilityResult">
-                    <span class="label-text">Pick a song to see your odds tonight!</span>
+                    <span class="label-text">Add songs to see your odds!</span>
                 </div>
 
                 <!-- Tour Selector Engine -->
@@ -956,14 +1133,29 @@
                         <div class="stat-card hype">
                             <span class="stat-label">🌟 Hype</span>
                             <div class="stat-value" id="hypeStat">--</div>
+                            <div id="hypeBothStat" style="font-size:0.8rem; color:var(--gold); display:none; margin-top:4px;">Both: --</div>
                             <p class="stat-info">Odds for your specific date</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Randomizer -->
-            <section class="glass-card" aria-label="Surprise Song Randomizer">
+            <!-- Tour History Card -->
+            <section class="glass-card history-card" aria-label="Surprise Song Tracker History">
+                <div class="card-title">
+                    <span class="icon">📖</span>
+                    Past Surprise Songs
+                </div>
+                <div id="tourHistoryContent">
+                    <div class="empty-state" style="margin-top:16px">
+                        <div class="empty-icon">⏳</div>
+                        <p>No songs played yet!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Randomizer Card -->
+            <section class="glass-card" aria-label="Random Pair Generator">
                 <div class="card-title">
                     <span class="icon">🎲</span>
                     Tonight's Surprise Pair
@@ -981,7 +1173,8 @@
         <div class="controls-bar">
             <div class="search-wrapper">
                 <span class="search-icon" aria-hidden="true">🔍</span>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search songs, albums..." aria-label="Search songs, albums">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search songs, albums..."
+                    aria-label="Search songs, albums">
             </div>
             <button class="reset-btn" id="resetBtn" aria-label="Reset tour progress">🔄 Reset Tour</button>
         </div>
@@ -999,6 +1192,34 @@
 
     <!-- Toast notification -->
     <div class="toast" id="toast"></div>
+
+    <!-- Concert Selection Modal -->
+    <div id="concertModal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="modalViewSelect">
+                <h3>Where was it played?</h3>
+                <p>You marked <strong id="modalSongName"></strong> as a surprise song!</p>
+                <select id="modalConcertSelect" class="modal-select">
+                    <!-- Populated via JS -->
+                </select>
+                <div class="modal-actions">
+                    <button id="modalSaveBtn" class="btn-save">Save</button>
+                    <button id="modalSkipBtn" class="btn-skip">Unknown</button>
+                </div>
+            </div>
+
+            <div id="modalViewReplace">
+                <h3>Concert Full!</h3>
+                <p><span id="modalReplaceCity" style="color:var(--gold); font-weight:bold;"></span> already has 2 songs recorded. Which one should this new song replace?</p>
+                <div id="modalReplaceOptions" class="replace-options">
+                    <!-- Populated via JS -->
+                </div>
+                <div class="modal-actions">
+                    <button id="modalReplaceCancelBtn" class="btn-skip">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         /* ============================================
@@ -1257,21 +1478,40 @@
         /* ============================================
            STATE
            ============================================ */
-        let checkedIds = new Set();
+        let playedMap = new Map(); // Map<songId, concertIndex> (-1 = Unknown)
+        let userDreamSongs = new Set();
+        let targetSongIdForModal = null;
+        let targetElementForModal = null;
+
+        function combinations(n, r) {
+            if (r > n) return 0;
+            if (r === 0 || r === n) return 1;
+            let res = 1;
+            for (let i = 1; i <= r; i++) {
+                res = res * (n - i + 1) / i;
+            }
+            return res;
+        }
 
         function loadState() {
             try {
                 const saved = localStorage.getItem(LS_KEY);
                 if (saved) {
-                    checkedIds = new Set(JSON.parse(saved));
+                    const parsed = JSON.parse(saved);
+                    // Legacy Support: Array of IDs
+                    if (Array.isArray(parsed) && (parsed.length === 0 || typeof parsed[0] === 'number')) {
+                        parsed.forEach(id => playedMap.set(id, -1));
+                    } else if (Array.isArray(parsed) && Array.isArray(parsed[0])) {
+                        playedMap = new Map(parsed);
+                    }
                 }
             } catch (e) {
-                checkedIds = new Set();
+                playedMap = new Map();
             }
         }
 
         function saveState() {
-            localStorage.setItem(LS_KEY, JSON.stringify([...checkedIds]));
+            localStorage.setItem(LS_KEY, JSON.stringify([...playedMap.entries()]));
         }
 
         /* ============================================
@@ -1280,11 +1520,13 @@
         const $remainingCount = document.getElementById('remainingCount');
         const $songList = document.getElementById('songList');
         const $dreamSelect = document.getElementById('dreamSongSelect');
+        const $dreamSongChips = document.getElementById('dreamSongChips');
         const $probabilityResult = document.getElementById('probabilityResult');
         const $concertSelect = document.getElementById('concertSelect');
         const $futureShowsCount = document.getElementById('futureShowsCount');
         const $heartbreakStat = document.getElementById('heartbreakStat');
         const $hypeStat = document.getElementById('hypeStat');
+        const $hypeBothStat = document.getElementById('hypeBothStat');
         const $heartbreakValue = document.getElementById('heartbreakValue');
         const $hypeValue = document.getElementById('hypeValue');
         const $futureWarning = document.getElementById('futureWarning');
@@ -1295,12 +1537,30 @@
         const $filterInfo = document.getElementById('filterInfo');
         const $resetBtn = document.getElementById('resetBtn');
         const $toast = document.getElementById('toast');
+        const $tourHistoryContent = document.getElementById('tourHistoryContent');
+
+        /* DOM for Modal */
+        const $concertModal = document.getElementById('concertModal');
+        const $modalViewSelect = document.getElementById('modalViewSelect');
+        const $modalViewReplace = document.getElementById('modalViewReplace');
+        const $modalSongName = document.getElementById('modalSongName');
+        const $modalConcertSelect = document.getElementById('modalConcertSelect');
+        const $modalSaveBtn = document.getElementById('modalSaveBtn');
+        const $modalSkipBtn = document.getElementById('modalSkipBtn');
+        const $modalReplaceCity = document.getElementById('modalReplaceCity');
+        const $modalReplaceOptions = document.getElementById('modalReplaceOptions');
+        const $modalReplaceCancelBtn = document.getElementById('modalReplaceCancelBtn');
 
         /* ============================================
            RENDER FUNCTIONS
            ============================================ */
         function getUnplayedCount() {
-            return TOTAL - checkedIds.size;
+            let unplayed = 0;
+            playedMap.forEach(v => {
+                 // Technically playedMap only stores played songs, so its size is the count.
+            });
+            // Actually wait, playedMap stores everything that is played.
+            return TOTAL - playedMap.size;
         }
 
         function updateCounter() {
@@ -1308,13 +1568,9 @@
         }
 
         function populateDreamSelect() {
-            const currentVal = $dreamSelect.value;
-            // Keep the default option
-            $dreamSelect.innerHTML = '<option value="">— Select your dream song —</option>';
+            $dreamSelect.innerHTML = '<option value="">— Add a dream song —</option>';
             
-            // Group songs by album
             const grouped = {};
-            // Maintains order
             const albumsInOrder = [];
             
             SONGS.forEach(song => {
@@ -1326,7 +1582,6 @@
                 grouped[album].push(song);
             });
 
-            // Create optgroups
             albumsInOrder.forEach(albumName => {
                 const optGroup = document.createElement('optgroup');
                 optGroup.label = albumName;
@@ -1335,20 +1590,42 @@
                     const option = document.createElement('option');
                     option.value = song.id;
                     option.textContent = song.title; // Removed duplicate artist text
-                    if (checkedIds.has(song.id)) {
+                    if (playedMap.has(song.id)) {
                         option.textContent += ' ✓ (played)';
                         option.style.color = '#66BB6A';
+                        option.disabled = true;
+                    }
+                    if (userDreamSongs.has(song.id)) {
+                        option.disabled = true;
                     }
                     optGroup.appendChild(option);
                 });
                 
                 $dreamSelect.appendChild(optGroup);
             });
+            $dreamSelect.value = "";
+        }
 
-            // Restore selection if still valid
-            if (currentVal) {
-                $dreamSelect.value = currentVal;
-            }
+        function renderDreamChips() {
+            $dreamSongChips.innerHTML = '';
+            userDreamSongs.forEach(id => {
+                const song = SONGS.find(s => s.id === id);
+                if (!song) return;
+                const chip = document.createElement('div');
+                chip.className = 'dream-song-chip';
+                chip.innerHTML = `
+                    <span>${escapeHtml(song.title)}</span>
+                    <span class="remove-chip" aria-label="Remove">&times;</span>
+                `;
+                chip.querySelector('.remove-chip').addEventListener('click', () => {
+                    userDreamSongs.delete(id);
+                    renderDreamChips();
+                    populateDreamSelect();
+                    calculateProbability();
+                    calculateFutureOdds();
+                });
+                $dreamSongChips.appendChild(chip);
+            });
         }
 
 
@@ -1359,26 +1636,38 @@
 
             SONGS.forEach(song => {
                 // Apply search filter
-                if (lowerFilter && !song.title.toLowerCase().includes(lowerFilter) && !song.artist.toLowerCase().includes(lowerFilter) && !song.album.toLowerCase().includes(lowerFilter)) {
+                const sTitle = song.title || '';
+                const sArtist = song.artist || '';
+                const sAlbum = song.album || '';
+                
+                if (lowerFilter && !sTitle.toLowerCase().includes(lowerFilter) && !sArtist.toLowerCase().includes(lowerFilter) && !sAlbum.toLowerCase().includes(lowerFilter)) {
                     return;
                 }
                 visibleCount++;
 
-                const isChecked = checkedIds.has(song.id);
+                const isChecked = playedMap.has(song.id);
+                let badgeText = '✓ played';
+                if (isChecked) {
+                    const cIndex = playedMap.get(song.id);
+                    if (cIndex >= 0 && CONCERTS[cIndex]) {
+                        badgeText = `✓ played (${CONCERTS[cIndex].city})`;
+                    }
+                }
+
                 const item = document.createElement('div');
                 item.className = `song-item${isChecked ? ' checked' : ''}`;
                 item.setAttribute('role', 'listitem');
-                item.setAttribute('aria-label', `${song.title} by ${song.artist}`);
+                item.setAttribute('aria-label', `${sTitle} by ${sArtist}`);
                 item.dataset.id = song.id;
 
                 item.innerHTML = `
                     <div class="custom-checkbox"></div>
                     <div class="song-meta">
-                        <div class="song-title">${escapeHtml(song.title)}</div>
-                        <div class="song-artist">${escapeHtml(song.artist)}</div>
+                        <div class="song-title">${escapeHtml(sTitle)}</div>
+                        <div class="song-artist">${escapeHtml(sArtist)}</div>
                     </div>
-                    <span class="song-album-tag">${escapeHtml(song.album)}</span>
-                    <span class="played-badge">✓ played</span>
+                    <span class="song-album-tag">${escapeHtml(sAlbum)}</span>
+                    <span class="played-badge">${badgeText}</span>
                 `;
 
                 item.addEventListener('click', () => toggleSong(song.id, item));
@@ -1406,46 +1695,202 @@
         }
 
         /* ============================================
-           TOGGLE SONG
+           TOGGLE SONG & HISTORY MANAGEMENT
            ============================================ */
         function toggleSong(id, element) {
-            if (checkedIds.has(id)) {
-                checkedIds.delete(id);
+            if (playedMap.has(id)) {
+                playedMap.delete(id);
                 element.classList.remove('checked');
+                saveState();
+                updateCounter();
+                populateDreamSelect();
+                calculateProbability();
+                calculateFutureOdds();
+                updateRandomizerState();
+                renderTourHistory();
+                renderSongList($searchInput.value.trim()); // To remove badge text specifically
             } else {
-                checkedIds.add(id);
-                element.classList.add('checked');
+                openModal(id, element);
             }
+        }
+
+        function openModal(songId, element) {
+            targetSongIdForModal = songId;
+            targetElementForModal = element;
+            const song = SONGS.find(s => s.id === songId);
+            $modalSongName.textContent = song.title;
+
+            $modalViewSelect.style.display = 'block';
+            $modalViewReplace.style.display = 'none';
+
+            $modalConcertSelect.innerHTML = '<option value="" disabled selected>-- Select a Past Show --</option>';
+            const now = new Date();
+            
+            CONCERTS.forEach((show, index) => {
+                const showTime = getConcertTime(show.date, show.city);
+                if (showTime < now) {
+                    const [yyyy, mm, dd] = show.date.split("-");
+                    const safeDate = new Date(yyyy, mm - 1, dd);
+                    const dateStr = safeDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = `${dateStr} — ${show.city}`;
+                    $modalConcertSelect.appendChild(option);
+                }
+            });
+
+            $concertModal.classList.add('active');
+        }
+
+        $modalSaveBtn.addEventListener('click', () => {
+             const selectedIdx = parseInt($modalConcertSelect.value);
+             if (isNaN(selectedIdx)) {
+                 showToast("Please select a valid concert show!");
+                 return;
+             }
+             
+             let existingCount = 0;
+             const existingSongs = [];
+             playedMap.forEach((cIdx, sId) => {
+                 if (cIdx === selectedIdx) {
+                     existingCount++;
+                     existingSongs.push(sId);
+                 }
+             });
+
+             if (existingCount >= 2) {
+                 triggerReplacementFlow(selectedIdx, existingSongs);
+             } else {
+                 confirmPlayedState(selectedIdx);
+             }
+        });
+
+        $modalSkipBtn.addEventListener('click', () => {
+             confirmPlayedState(-1); // -1 = Unknown
+        });
+
+        $modalReplaceCancelBtn.addEventListener('click', () => {
+            $modalViewReplace.style.display = 'none';
+            $modalViewSelect.style.display = 'block';
+        });
+
+        function triggerReplacementFlow(concertIdx, existingSongIds) {
+             const concert = CONCERTS[concertIdx];
+             $modalReplaceCity.textContent = concert.city;
+             
+             $modalReplaceOptions.innerHTML = '';
+             existingSongIds.forEach(id => {
+                 const s = SONGS.find(x => x.id === id);
+                 const btn = document.createElement('button');
+                 btn.className = 'btn-replace-song';
+                 btn.innerHTML = `Replace <strong>${escapeHtml(s.title)}</strong>`;
+                 btn.addEventListener('click', () => {
+                      playedMap.delete(id); // uncheck old song completely
+                      confirmPlayedState(concertIdx);
+                 });
+                 $modalReplaceOptions.appendChild(btn);
+             });
+
+             $modalViewSelect.style.display = 'none';
+             $modalViewReplace.style.display = 'block';
+        }
+
+        function confirmPlayedState(concertIndex) {
+            playedMap.set(targetSongIdForModal, concertIndex);
+            
+            targetElementForModal.classList.add('checked');
+            if (userDreamSongs.has(targetSongIdForModal)) {
+                userDreamSongs.delete(targetSongIdForModal);
+                renderDreamChips();
+            }
+
+            $concertModal.classList.remove('active');
+            
             saveState();
             updateCounter();
             populateDreamSelect();
             calculateProbability();
             calculateFutureOdds();
             updateRandomizerState();
+            renderTourHistory();
+            renderSongList($searchInput.value.trim()); 
+        }
+
+        function renderTourHistory() {
+             if (playedMap.size === 0) {
+                 $tourHistoryContent.innerHTML = `
+                    <div class="empty-state" style="margin-top:16px">
+                        <div class="empty-icon">⏳</div>
+                        <p>No songs played yet!</p>
+                    </div>
+                 `;
+                 return;
+             }
+
+             const historyGroups = {}; 
+             const unknownSongs = [];
+
+             playedMap.forEach((cIndex, songId) => {
+                 if (cIndex === -1) {
+                     unknownSongs.push(songId);
+                 } else {
+                     if (!historyGroups[cIndex]) historyGroups[cIndex] = [];
+                     historyGroups[cIndex].push(songId);
+                 }
+             });
+
+             let html = '<div class="history-timeline">';
+
+             const sortedConcertIdxs = Object.keys(historyGroups).map(k => parseInt(k)).sort((a,b) => b - a);
+
+             sortedConcertIdxs.forEach(cIdx => {
+                  const show = CONCERTS[cIdx];
+                  const [yyyy, mm, dd] = show.date.split("-");
+                  const dateStr = new Date(yyyy, mm - 1, dd).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                  
+                  let songsHtml = '';
+                  historyGroups[cIdx].forEach(sId => {
+                       const s = SONGS.find(x => x.id === sId);
+                       if (s) songsHtml += `<span>🎶 ${escapeHtml(s.title)}</span>`;
+                  });
+
+                  html += `
+                      <div class="history-item">
+                          <div class="history-header">
+                              <span>${show.city}</span>
+                              <span style="color:rgba(255,255,255,0.5); font-size:0.75rem;">${dateStr}</span>
+                          </div>
+                          <div class="history-songs">${songsHtml}</div>
+                      </div>
+                  `;
+             });
+
+             if (unknownSongs.length > 0) {
+                  let unkHtml = '';
+                  unknownSongs.forEach(sId => {
+                       const s = SONGS.find(x => x.id === sId);
+                       if (s) unkHtml += `<span>🎶 ${escapeHtml(s.title)}</span>`;
+                  });
+                  html += `
+                      <div class="history-item" style="border-color: rgba(255,255,255,0.05); background: transparent;">
+                          <div class="history-header" style="color:var(--text-muted)">
+                              <span>Unknown Concert</span>
+                          </div>
+                          <div class="history-songs" style="color:var(--text-muted)">${unkHtml}</div>
+                      </div>
+                  `;
+             }
+
+             html += '</div>';
+             $tourHistoryContent.innerHTML = html;
         }
 
         /* ============================================
            PROBABILITY CALCULATOR
            ============================================ */
         function calculateProbability() {
-            const selectedId = parseInt($dreamSelect.value);
-            if (!selectedId) {
-                $probabilityResult.innerHTML = '<span class="label-text">Pick a song to see your odds tonight!</span>';
-                return;
-            }
-
-            const song = SONGS.find(s => s.id === selectedId);
-            if (!song) return;
-
-            if (checkedIds.has(selectedId)) {
-                $probabilityResult.innerHTML = `
-                    <div>
-                        <div class="label-text" style="color: var(--success);">✓ Already played!</div>
-                        <div style="margin-top:4px; color: var(--text-muted); font-size:0.85rem;">
-                            <span class="song-name">${escapeHtml(song.title)}</span> has already been performed.
-                        </div>
-                    </div>
-                `;
+            if (userDreamSongs.size === 0) {
+                $probabilityResult.innerHTML = '<span class="label-text">Add songs to see your odds!</span>';
                 return;
             }
 
@@ -1455,19 +1900,54 @@
                 return;
             }
 
-            const probability = (2 / unplayed) * 100;
-            const clampedProb = Math.min(probability, 100);
+            const k = userDreamSongs.size;
+            const N = unplayed;
 
-            $probabilityResult.innerHTML = `
-                <div>
-                    <div class="percent" style="color: ${getProbColor(clampedProb)};">
-                        ${clampedProb.toFixed(2)}%
+            let probAtLeastOne = 0;
+            let probBoth = 0;
+
+            if (N >= 2) {
+                const totalCombos = combinations(N, 2);
+                const failCombos = combinations(N - k, 2);
+                probAtLeastOne = (1 - (failCombos / totalCombos)) * 100;
+                
+                if (k >= 2) {
+                    const bothCombos = combinations(k, 2);
+                    probBoth = (bothCombos / totalCombos) * 100;
+                }
+            } else if (N === 1) {
+                probAtLeastOne = (k >= 1) ? 100 : 0;
+            }
+
+            const clampedProb1 = Math.min(probAtLeastOne, 100);
+            const clampedProb2 = Math.min(probBoth, 100);
+            
+            let html = `
+                <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
+                    <div>
+                        <div class="percent" style="color: ${getProbColor(clampedProb1)};">
+                            ${clampedProb1.toFixed(2)}%
+                        </div>
+                        <div style="margin-top:2px; font-size:0.85rem; color: var(--text-muted);">
+                            chance of catching <strong>at least 1</strong> tonight
+                        </div>
                     </div>
-                    <div style="margin-top:4px; font-size:0.85rem; color: var(--text-muted);">
-                        chance of hearing <span class="song-name">${escapeHtml(song.title)}</span> tonight!
-                    </div>
-                </div>
             `;
+            
+            if (k >= 2) {
+                html += `
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;">
+                        <div class="percent" style="font-size: 1.25rem; color: ${getProbColor(clampedProb2)};">
+                            ${clampedProb2.toFixed(2)}%
+                        </div>
+                        <div style="margin-top:2px; font-size:0.8rem; color: var(--text-muted);">
+                            chance of catching <strong>both</strong> tonight
+                        </div>
+                    </div>
+                `;
+            }
+            html += `</div>`;
+            $probabilityResult.innerHTML = html;
         }
 
         function getProbColor(p) {
@@ -1479,22 +1959,68 @@
         /* ============================================
            FUTURE CONCERT PROBABILITY ENGINE
            ============================================ */
+        const CITY_TZ = {
+            "GOYANG": "+09:00",
+            "TOKYO": "+09:00",
+            "TAMPA": "-04:00", 
+            "EL PASO": "-06:00", 
+            "MEXICO CITY": "-06:00",
+            "STANFORD": "-07:00", 
+            "LAS VEGAS": "-07:00", 
+            "BUSAN": "+09:00",
+            "MADRID": "+02:00", 
+            "BRUSSELS": "+02:00", 
+            "LONDON": "+01:00", 
+            "MUNICH": "+02:00", 
+            "PARIS": "+02:00", 
+            "EAST RUTHERFORD": "-04:00", 
+            "FOXBOROUGH": "-04:00", 
+            "BALTIMORE": "-04:00", 
+            "ARLINGTON": "-05:00", 
+            "TORONTO": "-04:00", 
+            "CHICAGO": "-05:00", 
+            "LOS ANGELES": "-07:00", 
+            "BOGOTA": "-05:00",
+            "LIMA": "-05:00",
+            "SANTIAGO": "-03:00",
+            "BUENOS AIRES": "-03:00",
+            "SÃO PAULO": "-03:00",
+            "KAOHSIUNG": "+08:00",
+            "BANGKOK": "+07:00",
+            "KUALA LUMPUR": "+08:00",
+            "SINGAPORE": "+08:00",
+            "JAKARTA": "+07:00",
+            "MELBOURNE": "+11:00", 
+            "SYDNEY": "+11:00", 
+            "HONG KONG": "+08:00",
+            "MANILA": "+08:00"
+        };
+        
+        function getConcertTime(dateStr, city, time = "19:00:00") {
+            const tz = CITY_TZ[city] || "+00:00";
+            return new Date(`${dateStr}T${time}${tz}`);
+        }
+
         function initTourSelector() {
             $concertSelect.innerHTML = '<option value="" disabled selected>-- Select Your Show --</option>';
 
-            // "Now" is April 17, 2026 per context
-            const now = new Date("2026-04-17T00:00:00");
-            now.setHours(0, 0, 0, 0);
+            const now = new Date();
 
             CONCERTS.forEach((show, index) => {
-                const showDate = new Date(show.date + "T00:00:00");
+                const showTime = getConcertTime(show.date, show.city);
+                const showMidnight = getConcertTime(show.date, show.city, "00:00:00");
+                const showEndOfDay = getConcertTime(show.date, show.city, "23:59:59");
+
                 const option = document.createElement('option');
                 option.value = index;
 
-                const isPast = showDate < now;
-                const isToday = showDate.getTime() === now.getTime();
+                const isPast = showTime < now;
+                const isToday = now >= showMidnight && now <= showEndOfDay;
 
-                const dateStr = showDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const [yyyy, mm, dd] = show.date.split("-");
+                const safeDate = new Date(yyyy, mm - 1, dd);
+                const dateStr = safeDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
                 option.textContent = `${dateStr} — ${show.city}${isToday ? ' (TODAY)' : ''}`;
 
                 if (isPast) {
@@ -1505,51 +2031,66 @@
         }
 
         function calculateFutureOdds() {
-            const selectedId = parseInt($dreamSelect.value);
             const selectedShowIndex = parseInt($concertSelect.value);
 
-            if (!selectedId || isNaN(selectedShowIndex)) {
+            if (userDreamSongs.size === 0 || isNaN(selectedShowIndex)) {
                 $heartbreakStat.textContent = '--';
                 $hypeStat.textContent = '--';
-                $futureShowsCount.textContent = "Select a song and your show date";
+                $hypeBothStat.style.display = 'none';
+                $futureShowsCount.textContent = "Select songs and your show date";
                 return;
             }
 
             const unplayedCount = getUnplayedCount();
-            if (checkedIds.has(selectedId)) {
-                $heartbreakStat.textContent = 'DONE';
-                $hypeStat.textContent = 'DONE';
-                $futureShowsCount.textContent = "This song has already been played!";
-                return;
-            }
+            
+            const userShowTime = getConcertTime(CONCERTS[selectedShowIndex].date, CONCERTS[selectedShowIndex].city);
+            const now = new Date();
 
-            const userShowDate = new Date(CONCERTS[selectedShowIndex].date + "T00:00:00");
-            const now = new Date("2026-04-17T00:00:00");
-            now.setHours(0, 0, 0, 0);
-
-            // Calculate FUTURE shows BEFORE yours
             const futureShowsBefore = CONCERTS.filter(show => {
-                const d = new Date(show.date + "T00:00:00");
-                return d > now && d < userShowDate;
+                const showTime = getConcertTime(show.date, show.city);
+                return showTime > now && showTime < userShowTime;
             }).length;
 
             $futureShowsCount.textContent = `${futureShowsBefore} future shows before yours`;
 
             const C = futureShowsBefore;
             const N = unplayedCount;
+            const k = userDreamSongs.size;
+            const m = 2 * C;
 
-            // Heartbreak: odds it plays in those C concerts
-            const heartbreakP = Math.min(((2 * C) / N) * 100, 100);
-            $heartbreakStat.textContent = heartbreakP.toFixed(2) + "%";
-
-            // Hype: odds for your show (the 2 songs that night) among remains
-            const remainingAfterShows = N - (2 * C);
-            if (remainingAfterShows <= 0) {
-                $hypeStat.textContent = "N/A";
-                $futureShowsCount.textContent = "Pool exhausted before your date!";
+            let heartbreakP = 0;
+            if (m >= N) {
+                heartbreakP = 100;
             } else {
-                const hypeP = (2 / remainingAfterShows) * 100;
-                $hypeStat.textContent = Math.min(hypeP, 100).toFixed(2) + "%";
+                const totalMCombos = combinations(N, m);
+                const safeMCombos = combinations(N - k, m);
+                heartbreakP = (1 - (safeMCombos / totalMCombos)) * 100;
+            }
+            
+            $heartbreakStat.textContent = Math.min(heartbreakP, 100).toFixed(2) + "%";
+
+            const remainingAfterShows = N - m;
+            $hypeBothStat.style.display = 'none';
+
+            if (remainingAfterShows < 2) {
+                $hypeStat.textContent = "N/A";
+                if (remainingAfterShows === 1) {
+                   const hypeP1 = (k >= 1) ? 100 : 0;
+                   $hypeStat.textContent = Math.min(hypeP1, 100).toFixed(2) + "%";
+                } else {
+                   $futureShowsCount.textContent = "Pool exhausted before your date!";
+                }
+            } else {
+                const totalCombos = combinations(remainingAfterShows, 2);
+                const failCombos = combinations(remainingAfterShows - k, 2);
+                const hypeP1 = (1 - (failCombos / totalCombos)) * 100;
+                $hypeStat.textContent = Math.min(hypeP1, 100).toFixed(2) + "%";
+                
+                if (k >= 2) {
+                    const hypeP2 = (combinations(k, 2) / totalCombos) * 100;
+                    $hypeBothStat.textContent = "Both: " + Math.min(hypeP2, 100).toFixed(2) + "%";
+                    $hypeBothStat.style.display = 'block';
+                }
             }
         }
 
@@ -1569,7 +2110,7 @@
         }
 
         function generatePair() {
-            const unplayed = SONGS.filter(s => !checkedIds.has(s.id));
+            const unplayed = SONGS.filter(s => !playedMap.has(s.id));
             if (unplayed.length < 2) return;
 
             // Shuffle & pick 2
@@ -1641,7 +2182,7 @@
            ============================================ */
         $resetBtn.addEventListener('click', () => {
             if (!confirm('🔄 Reset all tour progress? This will uncheck every song.')) return;
-            checkedIds.clear();
+            playedMap.clear();
             saveState();
             renderSongList($searchInput.value.trim());
             updateCounter();
@@ -1649,6 +2190,7 @@
             calculateProbability();
             calculateFutureOdds();
             updateRandomizerState();
+            renderTourHistory();
             $randomResults.innerHTML = '';
             showToast('✨ Tour progress has been reset!');
         });
@@ -1657,8 +2199,14 @@
            EVENT LISTENERS
            ============================================ */
         $dreamSelect.addEventListener('change', () => {
-            calculateProbability();
-            calculateFutureOdds();
+            const selectedId = parseInt($dreamSelect.value);
+            if (selectedId && !userDreamSongs.has(selectedId)) {
+                userDreamSongs.add(selectedId);
+                renderDreamChips();
+                populateDreamSelect();
+                calculateProbability();
+                calculateFutureOdds();
+            }
         });
 
         $concertSelect.addEventListener('change', calculateFutureOdds);
@@ -1676,6 +2224,7 @@
         calculateProbability();
         calculateFutureOdds();
         updateRandomizerState();
+        renderTourHistory();
     </script>
 </body>
 
