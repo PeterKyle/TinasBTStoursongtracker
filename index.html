@@ -347,7 +347,7 @@
             line-height: 1;
             padding: 0 4px;
         }
-        
+
         .dream-song-chip .remove-chip:hover {
             color: #FF6B6B;
         }
@@ -621,6 +621,11 @@
             flex-shrink: 0;
         }
 
+        .random-song-card .song-info {
+            flex: 1;
+            min-width: 0;
+        }
+
         .random-song-card .song-info .rs-title {
             font-weight: 700;
             color: var(--text);
@@ -823,6 +828,36 @@
             color: var(--success);
         }
 
+        .spotify-btn {
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            color: #1DB954;
+            /* Official Spotify green */
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .spotify-btn:hover {
+            transform: translateY(-3px) scale(1.15);
+            filter: drop-shadow(0 4px 8px rgba(29, 185, 84, 0.4));
+        }
+
+        .spotify-btn.soundcloud {
+            color: #FF5500;
+        }
+
+        .spotify-btn.soundcloud:hover {
+            filter: drop-shadow(0 4px 8px rgba(255, 85, 0, 0.4));
+        }
+
         .played-badge {
             font-size: 0.75rem;
             color: var(--success);
@@ -944,10 +979,12 @@
             pointer-events: none;
             transition: opacity var(--transition);
         }
+
         .modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
+
         .modal-content {
             background: var(--bg-card);
             border: 1px solid var(--border-card);
@@ -958,19 +995,41 @@
             text-align: center;
             transform: translateY(20px);
             transition: transform var(--transition);
+            position: relative;
         }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: color var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
         .modal-overlay.active .modal-content {
             transform: translateY(0);
         }
+
         .modal-content h3 {
             margin-bottom: 8px;
             color: var(--gold);
         }
+
         .modal-content p {
             margin-bottom: 20px;
             color: var(--text-dim);
             font-size: 0.9rem;
         }
+
         .modal-select {
             width: 100%;
             padding: 12px;
@@ -980,10 +1039,12 @@
             border-radius: var(--radius-sm);
             margin-bottom: 20px;
         }
+
         .modal-actions {
             display: flex;
             gap: 12px;
         }
+
         .modal-actions button {
             flex: 1;
             padding: 12px;
@@ -993,17 +1054,21 @@
             font-weight: 600;
             transition: background var(--transition);
         }
+
         .btn-save {
             background: var(--accent);
             color: #111;
         }
+
         .btn-save:hover {
             background: var(--accent-glow);
         }
+
         .btn-skip {
             background: rgba(255, 255, 255, 0.1);
             color: var(--text);
         }
+
         .btn-skip:hover {
             background: rgba(255, 255, 255, 0.2);
         }
@@ -1012,12 +1077,14 @@
         #modalViewReplace {
             display: none;
         }
+
         .replace-options {
             display: flex;
             flex-direction: column;
             gap: 8px;
             margin-bottom: 20px;
         }
+
         .btn-replace-song {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1028,6 +1095,7 @@
             text-align: left;
             transition: all var(--transition);
         }
+
         .btn-replace-song:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--accent);
@@ -1040,6 +1108,7 @@
             gap: 12px;
             margin-top: 16px;
         }
+
         .history-item {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1049,6 +1118,7 @@
             flex-direction: column;
             gap: 8px;
         }
+
         .history-header {
             display: flex;
             justify-content: space-between;
@@ -1061,6 +1131,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding-bottom: 8px;
         }
+
         .history-songs {
             display: flex;
             flex-direction: column;
@@ -1085,8 +1156,8 @@
             <p class="subtitle">2026 World Tour — Track every surprise song</p>
             <div class="counter-badge" aria-live="polite">
                 <span>Songs remaining:</span>
-                <span class="count" id="remainingCount">154</span>
-                <span class="total">/ 154</span>
+                <span class="count" id="remainingCount">123</span>
+                <span class="total">/ 123</span>
             </div>
         </header>
 
@@ -1133,7 +1204,9 @@
                         <div class="stat-card hype">
                             <span class="stat-label">🌟 Hype</span>
                             <div class="stat-value" id="hypeStat">--</div>
-                            <div id="hypeBothStat" style="font-size:0.8rem; color:var(--gold); display:none; margin-top:4px;">Both: --</div>
+                            <div id="hypeBothStat"
+                                style="font-size:0.8rem; color:var(--gold); display:none; margin-top:4px;">Both: --
+                            </div>
                             <p class="stat-info">Odds for your specific date</p>
                         </div>
                     </div>
@@ -1155,7 +1228,7 @@
             </section>
 
             <!-- Randomizer Card -->
-            <section class="glass-card" aria-label="Random Pair Generator">
+            <section class="glass-card" style="grid-column: 1 / -1;" aria-label="Random Pair Generator">
                 <div class="card-title">
                     <span class="icon">🎲</span>
                     Tonight's Surprise Pair
@@ -1182,7 +1255,7 @@
         <!-- ======= SONG LIST ======= -->
         <div class="song-list-header">
             <span class="section-title">Full Song Pool</span>
-            <span class="filter-info" id="filterInfo">154 songs</span>
+            <span class="filter-info" id="filterInfo">123 songs</span>
         </div>
 
         <main class="song-list" id="songList" role="list" aria-label="Song checklist">
@@ -1196,6 +1269,7 @@
     <!-- Concert Selection Modal -->
     <div id="concertModal" class="modal-overlay">
         <div class="modal-content">
+            <button id="modalCloseBtn" class="modal-close" aria-label="Close modal">&times;</button>
             <div id="modalViewSelect">
                 <h3>Where was it played?</h3>
                 <p>You marked <strong id="modalSongName"></strong> as a surprise song!</p>
@@ -1210,7 +1284,8 @@
 
             <div id="modalViewReplace">
                 <h3>Concert Full!</h3>
-                <p><span id="modalReplaceCity" style="color:var(--gold); font-weight:bold;"></span> already has 2 songs recorded. Which one should this new song replace?</p>
+                <p><span id="modalReplaceCity" style="color:var(--gold); font-weight:bold;"></span> already has 2 songs
+                    recorded. Which one should this new song replace?</p>
                 <div id="modalReplaceOptions" class="replace-options">
                     <!-- Populated via JS -->
                 </div>
@@ -1223,165 +1298,133 @@
 
     <script>
         /* ============================================
-           SONG DATABASE — 154 SONGS
+           SONG DATABASE — 123 SONGS
            ============================================ */
         const SONGS = [
-            { id: 1, title: "Intro: 2 Cool 4 Skool", artist: "BTS", album: "2 Cool 4 Skool" },
-            { id: 2, title: "We Are Bulletproof Pt.2", artist: "BTS", album: "2 Cool 4 Skool" },
-            { id: 3, title: "No More Dream", artist: "BTS", album: "2 Cool 4 Skool" },
-            { id: 4, title: "Like", artist: "BTS", album: "2 Cool 4 Skool" },
-            { id: 5, title: "Outro: Circle Room Cypher", artist: "BTS", album: "2 Cool 4 Skool" },
-            { id: 6, title: "Intro: O!RUL8,2?", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 7, title: "N.O", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 8, title: "We On", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 9, title: "If I Ruled the World", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 10, title: "Coffee", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 11, title: "BTS Cypher Pt.1", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 12, title: "Attack on Bangtan", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 13, title: "Paldogangsan", artist: "BTS", album: "O!RUL8,2?" },
-            { id: 14, title: "Outro: Luv in Skool", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 15, title: "Intro: Skool Luv Affair", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 16, title: "Boy in Luv", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 17, title: "Skit: Soulmate", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 18, title: "Where You From", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 19, title: "Just One Day", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 20, title: "Tomorrow", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 21, title: "BTS Cypher Pt.2: Triptych", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 22, title: "Spine Breaker", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 23, title: "Jump", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 24, title: "Outro: Propose", artist: "BTS", album: "Skool Luv Affair" },
-            { id: 25, title: "Miss Right", artist: "BTS", album: "Skool Luv Affair Special Addition" },
-            { id: 26, title: "Intro: What Am I to You", artist: "BTS", album: "Dark & Wild" },
-            { id: 27, title: "Danger", artist: "BTS", album: "Dark & Wild" },
-            { id: 28, title: "War of Hormone", artist: "BTS", album: "Dark & Wild" },
-            { id: 29, title: "Hip Hop Phile", artist: "BTS", album: "Dark & Wild" },
-            { id: 30, title: "Let Me Know", artist: "BTS", album: "Dark & Wild" },
-            { id: 31, title: "Rain", artist: "BTS", album: "Dark & Wild" },
-            { id: 32, title: "BTS Cypher Pt.3: Killer", artist: "BTS", album: "Dark & Wild" },
-            { id: 33, title: "Interlude: What Are You Doing Now", artist: "BTS", album: "Dark & Wild" },
-            { id: 34, title: "Could You Turn off Your Cell Phone", artist: "BTS", album: "Dark & Wild" },
-            { id: 35, title: "Embarrassed", artist: "BTS", album: "Dark & Wild" },
-            { id: 36, title: "24/7=Heaven", artist: "BTS", album: "Dark & Wild" },
-            { id: 37, title: "Look Here", artist: "BTS", album: "Dark & Wild" },
-            { id: 38, title: "So 4 more", artist: "BTS", album: "2nd Anniversary Single" },
-            { id: 39, title: "Outro: Do You Think It Makes Sense?", artist: "BTS", album: "Dark & Wild" },
-            { id: 40, title: "The Stars", artist: "BTS", album: "Wake Up" },
-            { id: 41, title: "Iine!Pt.2 - Ano Bashode -", artist: "BTS", album: "Wake Up" },
-            { id: 42, title: "Outro.", artist: "BTS", album: "Wake Up" },
-            { id: 43, title: "Intro: The Most Beautiful Moment in Life", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 44, title: "I Need U", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 45, title: "Hold Me Tight", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 46, title: "Dope", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 47, title: "Boyz with Fun", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 48, title: "Converse High", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 49, title: "Moving On", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 50, title: "Outro: Love Is Not Over", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1" },
-            { id: 51, title: "Intro: Never Mind", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 52, title: "Run", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 53, title: "Butterfly", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 54, title: "Whalien 52", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 55, title: "Ma City", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 56, title: "Silver Spoon", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 57, title: "Autumn Leaves", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 58, title: "Outro: House of Cards", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2" },
-            { id: 59, title: "House of Cards (Full Length Edition)", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever" },
-            { id: 60, title: "Love Is Not Over (Full Length Edition)", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever" },
-            { id: 61, title: "Burning Up (Fire)", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever" },
-            { id: 62, title: "Save Me", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever" },
-            { id: 63, title: "Epilogue: Young Forever", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever" },
-            { id: 64, title: "Good Day", artist: "BTS", album: "Youth" },
-            { id: 65, title: "Wishing On A Star", artist: "BTS", album: "Youth" },
-            { id: 66, title: "For You", artist: "BTS", album: "Youth" },
-            { id: 67, title: "Intro: Boy Meets Evil", artist: "BTS", album: "Wings" },
-            { id: 68, title: "Blood Sweat & Tears", artist: "BTS", album: "Wings" },
-            { id: 69, title: "Begin", artist: "BTS", album: "Wings" },
-            { id: 70, title: "Lie", artist: "BTS", album: "Wings" },
-            { id: 71, title: "Stigma", artist: "BTS", album: "Wings" },
-            { id: 72, title: "First Love", artist: "BTS", album: "Wings" },
-            { id: 73, title: "Reflection", artist: "BTS", album: "Wings" },
-            { id: 74, title: "MAMA", artist: "BTS", album: "Wings" },
-            { id: 75, title: "Awake", artist: "BTS", album: "Wings" },
-            { id: 76, title: "Lost", artist: "BTS", album: "Wings" },
-            { id: 77, title: "BTS Cypher 4", artist: "BTS", album: "Wings" },
-            { id: 78, title: "Am I Wrong", artist: "BTS", album: "Wings" },
-            { id: 79, title: "21st Century Girl", artist: "BTS", album: "Wings" },
-            { id: 80, title: "2! 3!", artist: "BTS", album: "Wings" },
-            { id: 81, title: "Interlude: Wings", artist: "BTS", album: "Wings" },
-            { id: 82, title: "Spring Day", artist: "BTS", album: "You Never Walk Alone" },
-            { id: 83, title: "Not Today", artist: "BTS", album: "You Never Walk Alone" },
-            { id: 84, title: "Outro: Wings", artist: "BTS", album: "You Never Walk Alone" },
-            { id: 85, title: "A Supplementary Story: You Never Walk Alone", artist: "BTS", album: "You Never Walk Alone" },
-            { id: 86, title: "Intro: Serendipity", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 87, title: "DNA", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 88, title: "Best Of Me", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 89, title: "dimple", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 90, title: "Pied Piper", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 91, title: "MIC Drop", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 92, title: "Go Go", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 93, title: "Outro: Her", artist: "BTS", album: "Love Yourself: Her" },
-            { id: 94, title: "Intro: Singularity", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 95, title: "FAKE LOVE", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 96, title: "The Truth Untold (feat. Steve Aoki)", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 97, title: "134340", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 98, title: "Paradise", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 99, title: "Love Maze", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 100, title: "Magic Shop", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 101, title: "Airplane pt.2", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 102, title: "Anpanman", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 103, title: "So What", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 104, title: "Outro: Tear", artist: "BTS", album: "Love Yourself: Tear" },
-            { id: 105, title: "Don't Leave Me", artist: "BTS", album: "Face Yourself" },
-            { id: 106, title: "Crystal Snow", artist: "BTS", album: "Face Yourself" },
-            { id: 107, title: "Let Go", artist: "BTS", album: "Face Yourself" },
-            { id: 108, title: "Euphoria", artist: "BTS", album: "Love Yourself: Answer" },
-            { id: 109, title: "I'm Fine", artist: "BTS", album: "Love Yourself: Answer" },
-            { id: 110, title: "IDOL", artist: "BTS", album: "Love Yourself: Answer" },
-            { id: 111, title: "Trivia 承 : Love", artist: "BTS", album: "Love Yourself: Answer" },
-            { id: 112, title: "Trivia 起 : Just Dance", artist: "BTS", album: "Love Yourself: Answer" },
-            { id: 113, title: "Trivia 轉 : Seesaw", artist: "BTS", album: "Love Yourself: Answer" },
-            { id: 114, title: "Intro : Persona", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 115, title: "Boy With Luv (feat. Halsey)", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 116, title: "Mikrokosmos", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 117, title: "Make It Right", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 118, title: "HOME", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 119, title: "Jamais Vu", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 120, title: "Dionysus", artist: "BTS", album: "Map of the Soul: Persona" },
-            { id: 121, title: "Interlude : Shadow", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 122, title: "Black Swan", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 123, title: "Filter", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 124, title: "My Time", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 125, title: "Louder than bombs", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 126, title: "ON", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 127, title: "UGH!", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 128, title: "00:00 (Zero O’Clock)", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 129, title: "Inner Child", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 130, title: "Friends", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 131, title: "Moon", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 132, title: "Respect", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 133, title: "We are Bulletproof : the Eternal", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 134, title: "Outro : Ego", artist: "BTS", album: "Map of the Soul: 7" },
-            { id: 135, title: "Stay Gold", artist: "BTS", album: "Map of the Soul: 7 ~ The Journey ~" },
-            { id: 136, title: "Lights", artist: "BTS", album: "Map of the Soul: 7 ~ The Journey ~" },
-            { id: 137, title: "Your eyes tell", artist: "BTS", album: "Map of the Soul: 7 ~ The Journey ~" },
-            { id: 138, title: "Life Goes On", artist: "BTS", album: "BE" },
-            { id: 139, title: "Fly To My Room", artist: "BTS", album: "BE" },
-            { id: 140, title: "Blue & Grey", artist: "BTS", album: "BE" },
-            { id: 141, title: "Telepathy", artist: "BTS", album: "BE" },
-            { id: 142, title: "Dis-ease", artist: "BTS", album: "BE" },
-            { id: 143, title: "Stay", artist: "BTS", album: "BE" },
-            { id: 144, title: "Dynamite", artist: "BTS", album: "BE" },
-            { id: 145, title: "Born Singer", artist: "BTS", album: "Proof" },
-            { id: 146, title: "Yet To Come", artist: "BTS", album: "Proof" },
-            { id: 147, title: "Run BTS", artist: "BTS", album: "Proof" },
-            { id: 148, title: "For Youth", artist: "BTS", album: "Proof" },
-            { id: 149, title: "Take Two", artist: "BTS", album: "Digital Single" },
-            { id: 150, title: "My Universe", artist: "Coldplay & BTS", album: "Music of the Spheres" },
-            { id: 151, title: "Butter", artist: "BTS", album: "Butter (Single Album)" },
-            { id: 152, title: "Permission to Dance", artist: "BTS", album: "Butter (Single Album)" },
-            { id: 153, title: "Film out", artist: "BTS", album: "BTS, THE BEST" },
-            { id: 154, title: "Come Back Home", artist: "BTS", album: "Seo Taiji 25th Anniversary Remake Project" }
-        ];
-        /* ============================================
+            { id: 1, title: "We Are Bulletproof Pt.2", artist: "BTS", album: "2 Cool 4 Skool", spotifyUrl: "https://open.spotify.com/search/BTS%20We%20Are%20Bulletproof%20Pt.2" },
+            { id: 2, title: "No More Dream", artist: "BTS", album: "2 Cool 4 Skool", spotifyUrl: "https://open.spotify.com/search/BTS%20No%20More%20Dream" },
+            { id: 3, title: "Like", artist: "BTS", album: "2 Cool 4 Skool", spotifyUrl: "https://open.spotify.com/search/BTS%20Like" },
+            { id: 4, title: "N.O", artist: "BTS", album: "O!RUL8,2?", spotifyUrl: "https://open.spotify.com/search/BTS%20N.O" },
+            { id: 5, title: "We On", artist: "BTS", album: "O!RUL8,2?", spotifyUrl: "https://open.spotify.com/search/BTS%20We%20On" },
+            { id: 6, title: "If I Ruled the World", artist: "BTS", album: "O!RUL8,2?", spotifyUrl: "https://open.spotify.com/search/BTS%20If%20I%20Ruled%20the%20World" },
+            { id: 7, title: "Coffee", artist: "BTS", album: "O!RUL8,2?", spotifyUrl: "https://open.spotify.com/search/BTS%20Coffee" },
+            { id: 8, title: "Attack on Bangtan", artist: "BTS", album: "O!RUL8,2?", spotifyUrl: "https://open.spotify.com/search/BTS%20Attack%20on%20Bangtan" },
+            { id: 9, title: "Paldogangsan", artist: "BTS", album: "O!RUL8,2?", spotifyUrl: "https://open.spotify.com/search/BTS%20Paldogangsan" },
+            { id: 10, title: "Intro: Skool Luv Affair", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Intro%3A%20Skool%20Luv%20Affair" },
+            { id: 11, title: "Boy in Luv", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Boy%20in%20Luv" },
+            { id: 12, title: "Where You From", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Where%20You%20From" },
+            { id: 13, title: "Just One Day", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Just%20One%20Day" },
+            { id: 14, title: "Tomorrow", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Tomorrow" },
+            { id: 15, title: "BTS Cypher Pt.2: Triptych", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Cypher%20Pt.2%3A%20Triptych" },
+            { id: 16, title: "Spine Breaker", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Spine%20Breaker" },
+            { id: 17, title: "Jump", artist: "BTS", album: "Skool Luv Affair", spotifyUrl: "https://open.spotify.com/search/BTS%20Jump" },
+            { id: 18, title: "Miss Right", artist: "BTS", album: "Skool Luv Affair Special Addition", spotifyUrl: "https://open.spotify.com/search/BTS%20Miss%20Right" },
+            { id: 19, title: "Danger", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Danger" },
+            { id: 20, title: "War of Hormone", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20War%20of%20Hormone" },
+            { id: 21, title: "Hip Hop Phile", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Hip%20Hop%20Phile" },
+            { id: 22, title: "Let Me Know", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Let%20Me%20Know" },
+            { id: 23, title: "Rain", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Rain" },
+            { id: 24, title: "BTS Cypher Pt.3: Killer", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Cypher%20Pt.3%3A%20Killer" },
+            { id: 25, title: "Could You Turn off Your Cell Phone", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Could%20You%20Turn%20off%20Your%20Cell%20Phone" },
+            { id: 26, title: "Embarrassed", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Embarrassed" },
+            { id: 27, title: "24/7=Heaven", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%2024%2F7%3DHeaven" },
+            { id: 28, title: "Look Here", artist: "BTS", album: "Dark & Wild", spotifyUrl: "https://open.spotify.com/search/BTS%20Look%20Here" },
+            { id: 29, title: "So 4 more", artist: "BTS", album: "2nd Anniversary Single", spotifyUrl: "https://open.spotify.com/search/BTS%20So%204%20more" },
+            { id: 30, title: "The Stars", artist: "BTS", album: "Wake Up", spotifyUrl: "https://open.spotify.com/search/BTS%20The%20Stars" },
+            { id: 31, title: "Iine!Pt.2 - Ano Bashode -", artist: "BTS", album: "Wake Up", spotifyUrl: "https://open.spotify.com/search/BTS%20Iine%21Pt.2%20-%20Ano%20Bashode%20-" },
+            { id: 32, title: "I Need U", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1", spotifyUrl: "https://open.spotify.com/search/BTS%20I%20Need%20U" },
+            { id: 33, title: "Hold Me Tight", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1", spotifyUrl: "https://open.spotify.com/search/BTS%20Hold%20Me%20Tight" },
+            { id: 34, title: "Dope", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1", spotifyUrl: "https://open.spotify.com/search/BTS%20Dope" },
+            { id: 35, title: "Boyz with Fun", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1", spotifyUrl: "https://open.spotify.com/search/BTS%20Boyz%20with%20Fun" },
+            { id: 36, title: "Converse High", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1", spotifyUrl: "https://open.spotify.com/search/BTS%20Converse%20High" },
+            { id: 37, title: "Moving On", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 1", spotifyUrl: "https://open.spotify.com/search/BTS%20Moving%20On" },
+            { id: 38, title: "Run", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2", spotifyUrl: "https://open.spotify.com/search/BTS%20Run" },
+            { id: 39, title: "Butterfly", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2", spotifyUrl: "https://open.spotify.com/search/BTS%20Butterfly" },
+            { id: 40, title: "Whalien 52", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2", spotifyUrl: "https://open.spotify.com/search/BTS%20Whalien%2052" },
+            { id: 41, title: "Ma City", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2", spotifyUrl: "https://open.spotify.com/search/BTS%20Ma%20City" },
+            { id: 42, title: "Silver Spoon", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2", spotifyUrl: "https://open.spotify.com/search/BTS%20Silver%20Spoon" },
+            { id: 43, title: "Autumn Leaves", artist: "BTS", album: "The Most Beautiful Moment in Life, Pt. 2", spotifyUrl: "https://open.spotify.com/search/BTS%20Autumn%20Leaves" },
+            { id: 44, title: "House of Cards (Full Length Edition)", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever", spotifyUrl: "https://open.spotify.com/search/BTS%20House%20of%20Cards%20%28Full%20Length%20Edition%29" },
+            { id: 45, title: "Love Is Not Over (Full Length Edition)", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever", spotifyUrl: "https://open.spotify.com/search/BTS%20Love%20Is%20Not%20Over%20%28Full%20Length%20Edition%29" },
+            { id: 46, title: "Save Me", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever", spotifyUrl: "https://open.spotify.com/search/BTS%20Save%20Me" },
+            { id: 47, title: "Epilogue: Young Forever", artist: "BTS", album: "The Most Beautiful Moment in Life: Young Forever", spotifyUrl: "https://open.spotify.com/search/BTS%20Epilogue%3A%20Young%20Forever" },
+            { id: 48, title: "Good Day", artist: "BTS", album: "Youth", spotifyUrl: "https://open.spotify.com/search/BTS%20Good%20Day" },
+            { id: 49, title: "Wishing On A Star", artist: "BTS", album: "Youth", spotifyUrl: "https://open.spotify.com/search/BTS%20Wishing%20On%20A%20Star" },
+            { id: 50, title: "For You", artist: "BTS", album: "Youth", spotifyUrl: "https://open.spotify.com/search/BTS%20For%20You" },
+            { id: 51, title: "Blood Sweat & Tears", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Blood%20Sweat%20%26%20Tears" },
+            { id: 52, title: "Begin", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Begin" },
+            { id: 53, title: "Lie", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Lie" },
+            { id: 54, title: "Stigma", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Stigma" },
+            { id: 55, title: "First Love", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20First%20Love" },
+            { id: 56, title: "Reflection", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Reflection" },
+            { id: 57, title: "MAMA", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20MAMA" },
+            { id: 58, title: "Lost", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Lost" },
+            { id: 59, title: "BTS Cypher 4", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Cypher%204" },
+            { id: 60, title: "Am I Wrong", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%20Am%20I%20Wrong" },
+            { id: 61, title: "21st Century Girl", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%2021st%20Century%20Girl" },
+            { id: 62, title: "2! 3!", artist: "BTS", album: "Wings", spotifyUrl: "https://open.spotify.com/search/BTS%202%21%203%21" },
+            { id: 63, title: "Spring Day", artist: "BTS", album: "You Never Walk Alone", spotifyUrl: "https://open.spotify.com/search/BTS%20Spring%20Day" },
+            { id: 64, title: "Not Today", artist: "BTS", album: "You Never Walk Alone", spotifyUrl: "https://open.spotify.com/search/BTS%20Not%20Today" },
+            { id: 65, title: "Outro: Wings", artist: "BTS", album: "You Never Walk Alone", spotifyUrl: "https://open.spotify.com/search/BTS%20Outro%3A%20Wings" },
+            { id: 66, title: "A Supplementary Story: You Never Walk Alone", artist: "BTS", album: "You Never Walk Alone", spotifyUrl: "https://open.spotify.com/search/BTS%20A%20Supplementary%20Story%3A%20You%20Never%20Walk%20Alone" },
+            { id: 67, title: "DNA", artist: "BTS", album: "Love Yourself: Her", spotifyUrl: "https://open.spotify.com/search/BTS%20DNA" },
+            { id: 68, title: "Best Of Me", artist: "BTS", album: "Love Yourself: Her", spotifyUrl: "https://open.spotify.com/search/BTS%20Best%20Of%20Me" },
+            { id: 69, title: "dimple", artist: "BTS", album: "Love Yourself: Her", spotifyUrl: "https://open.spotify.com/search/BTS%20dimple" },
+            { id: 70, title: "Pied Piper", artist: "BTS", album: "Love Yourself: Her", spotifyUrl: "https://open.spotify.com/search/BTS%20Pied%20Piper" },
+            { id: 71, title: "Go Go", artist: "BTS", album: "Love Yourself: Her", spotifyUrl: "https://open.spotify.com/search/BTS%20Go%20Go" },
+            { id: 72, title: "Outro: Her", artist: "BTS", album: "Love Yourself: Her", spotifyUrl: "https://open.spotify.com/search/BTS%20Outro%3A%20Her" },
+            { id: 73, title: "The Truth Untold (feat. Steve Aoki)", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20The%20Truth%20Untold%20%28feat.%20Steve%20Aoki%29" },
+            { id: 74, title: "134340", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20134340" },
+            { id: 75, title: "Paradise", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20Paradise" },
+            { id: 76, title: "Love Maze", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20Love%20Maze" },
+            { id: 77, title: "Magic Shop", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20Magic%20Shop" },
+            { id: 78, title: "Airplane pt.2", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20Airplane%20pt.2" },
+            { id: 79, title: "Anpanman", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20Anpanman" },
+            { id: 80, title: "So What", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20So%20What" },
+            { id: 81, title: "Outro: Tear", artist: "BTS", album: "Love Yourself: Tear", spotifyUrl: "https://open.spotify.com/search/BTS%20Outro%3A%20Tear" },
+            { id: 82, title: "Don't Leave Me", artist: "BTS", album: "Face Yourself", spotifyUrl: "https://open.spotify.com/search/BTS%20Don%27t%20Leave%20Me" },
+            { id: 83, title: "Crystal Snow", artist: "BTS", album: "Face Yourself", spotifyUrl: "https://open.spotify.com/search/BTS%20Crystal%20Snow" },
+            { id: 84, title: "Let Go", artist: "BTS", album: "Face Yourself", spotifyUrl: "https://open.spotify.com/search/BTS%20Let%20Go" },
+            { id: 85, title: "I'm Fine", artist: "BTS", album: "Love Yourself: Answer", spotifyUrl: "https://open.spotify.com/search/BTS%20I%27m%20Fine" },
+            { id: 86, title: "Boy With Luv (feat. Halsey)", artist: "BTS", album: "Map of the Soul: Persona", spotifyUrl: "https://open.spotify.com/search/BTS%20Boy%20With%20Luv%20%28feat.%20Halsey%29" },
+            { id: 87, title: "Mikrokosmos", artist: "BTS", album: "Map of the Soul: Persona", spotifyUrl: "https://open.spotify.com/search/BTS%20Mikrokosmos" },
+            { id: 88, title: "Make It Right", artist: "BTS", album: "Map of the Soul: Persona", spotifyUrl: "https://open.spotify.com/search/BTS%20Make%20It%20Right" },
+            { id: 89, title: "HOME", artist: "BTS", album: "Map of the Soul: Persona", spotifyUrl: "https://open.spotify.com/search/BTS%20HOME" },
+            { id: 90, title: "Jamais Vu", artist: "BTS", album: "Map of the Soul: Persona", spotifyUrl: "https://open.spotify.com/search/BTS%20Jamais%20Vu" },
+            { id: 91, title: "Dionysus", artist: "BTS", album: "Map of the Soul: Persona", spotifyUrl: "https://open.spotify.com/search/BTS%20Dionysus" },
+            { id: 92, title: "Black Swan", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Black%20Swan" },
+            { id: 93, title: "Filter", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Filter" },
+            { id: 94, title: "My Time", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20My%20Time" },
+            { id: 95, title: "Louder than bombs", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Louder%20than%20bombs" },
+            { id: 96, title: "ON", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20ON" },
+            { id: 97, title: "UGH!", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20UGH%21" },
+            { id: 98, title: "00:00 (Zero O’Clock)", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%2000%3A00%20%28Zero%20O%E2%80%99Clock%29" },
+            { id: 99, title: "Inner Child", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Inner%20Child" },
+            { id: 100, title: "Friends", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Friends" },
+            { id: 101, title: "Respect", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Respect" },
+            { id: 102, title: "We are Bulletproof : the Eternal", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20We%20are%20Bulletproof%20%3A%20the%20Eternal" },
+            { id: 103, title: "Outro : Ego", artist: "BTS", album: "Map of the Soul: 7", spotifyUrl: "https://open.spotify.com/search/BTS%20Outro%20%3A%20Ego" },
+            { id: 104, title: "Stay Gold", artist: "BTS", album: "Map of the Soul: 7 ~ The Journey ~", spotifyUrl: "https://open.spotify.com/search/BTS%20Stay%20Gold" },
+            { id: 105, title: "Lights", artist: "BTS", album: "Map of the Soul: 7 ~ The Journey ~", spotifyUrl: "https://open.spotify.com/search/BTS%20Lights" },
+            { id: 106, title: "Your eyes tell", artist: "BTS", album: "Map of the Soul: 7 ~ The Journey ~", spotifyUrl: "https://open.spotify.com/search/BTS%20Your%20eyes%20tell" },
+            { id: 107, title: "Life Goes On", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Life%20Goes%20On" },
+            { id: 108, title: "Fly To My Room", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Fly%20To%20My%20Room" },
+            { id: 109, title: "Blue & Grey", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Blue%20%26%20Grey" },
+            { id: 110, title: "Telepathy", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Telepathy" },
+            { id: 111, title: "Dis-ease", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Dis-ease" },
+            { id: 112, title: "Stay", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Stay" },
+            { id: 113, title: "Dynamite", artist: "BTS", album: "BE", spotifyUrl: "https://open.spotify.com/search/BTS%20Dynamite" },
+            { id: 114, title: "Born Singer", artist: "BTS", album: "Proof", spotifyUrl: "https://open.spotify.com/search/BTS%20Born%20Singer" },
+            { id: 115, title: "Yet To Come", artist: "BTS", album: "Proof", spotifyUrl: "https://open.spotify.com/search/BTS%20Yet%20To%20Come" },
+            { id: 116, title: "For Youth", artist: "BTS", album: "Proof", spotifyUrl: "https://open.spotify.com/search/BTS%20For%20Youth" },
+            { id: 117, title: "Take Two", artist: "BTS", album: "Digital Single", spotifyUrl: "https://open.spotify.com/search/BTS%20Take%20Two" },
+            { id: 118, title: "My Universe", artist: "Coldplay & BTS", album: "Music of the Spheres", spotifyUrl: "https://open.spotify.com/search/Coldplay%20%26%20BTS%20My%20Universe" },
+            { id: 119, title: "Permission to Dance", artist: "BTS", album: "Butter (Single Album)", spotifyUrl: "https://open.spotify.com/search/BTS%20Permission%20to%20Dance" },
+            { id: 120, title: "Film out", artist: "BTS", album: "BTS, THE BEST", spotifyUrl: "https://open.spotify.com/search/BTS%20Film%20out" },
+            { id: 121, title: "Come Back Home", artist: "BTS", album: "Seo Taiji 25th Anniversary Remake Project", spotifyUrl: "https://open.spotify.com/search/BTS%20Come%20Back%20Home" },
+            { id: 122, title: "One More Night", artist: "BTS", album: "ARIRANG", spotifyUrl: "https://open.spotify.com/search/BTS%20One%20More%20Night" },
+            { id: 123, title: "Ddaeng", artist: "BTS", album: "SoundCloud", spotifyUrl: "https://soundcloud.com/yourxunnie/bts-ddaeng" }
+        ];     /* ============================================
            TOUR SCHEDULE — 85+ SHOWS
            ============================================ */
         const CONCERTS = [
@@ -1549,6 +1592,7 @@
         const $modalSkipBtn = document.getElementById('modalSkipBtn');
         const $modalReplaceCity = document.getElementById('modalReplaceCity');
         const $modalReplaceOptions = document.getElementById('modalReplaceOptions');
+        const $modalCloseBtn = document.getElementById('modalCloseBtn');
         const $modalReplaceCancelBtn = document.getElementById('modalReplaceCancelBtn');
 
         /* ============================================
@@ -1557,7 +1601,7 @@
         function getUnplayedCount() {
             let unplayed = 0;
             playedMap.forEach(v => {
-                 // Technically playedMap only stores played songs, so its size is the count.
+                // Technically playedMap only stores played songs, so its size is the count.
             });
             // Actually wait, playedMap stores everything that is played.
             return TOTAL - playedMap.size;
@@ -1569,10 +1613,10 @@
 
         function populateDreamSelect() {
             $dreamSelect.innerHTML = '<option value="">— Add a dream song —</option>';
-            
+
             const grouped = {};
             const albumsInOrder = [];
-            
+
             SONGS.forEach(song => {
                 const album = song.album || 'Unknown Album';
                 if (!grouped[album]) {
@@ -1585,7 +1629,7 @@
             albumsInOrder.forEach(albumName => {
                 const optGroup = document.createElement('optgroup');
                 optGroup.label = albumName;
-                
+
                 grouped[albumName].forEach(song => {
                     const option = document.createElement('option');
                     option.value = song.id;
@@ -1600,7 +1644,7 @@
                     }
                     optGroup.appendChild(option);
                 });
-                
+
                 $dreamSelect.appendChild(optGroup);
             });
             $dreamSelect.value = "";
@@ -1639,7 +1683,7 @@
                 const sTitle = song.title || '';
                 const sArtist = song.artist || '';
                 const sAlbum = song.album || '';
-                
+
                 if (lowerFilter && !sTitle.toLowerCase().includes(lowerFilter) && !sArtist.toLowerCase().includes(lowerFilter) && !sAlbum.toLowerCase().includes(lowerFilter)) {
                     return;
                 }
@@ -1660,17 +1704,23 @@
                 item.setAttribute('aria-label', `${sTitle} by ${sArtist}`);
                 item.dataset.id = song.id;
 
+                const spotifyHtml = getMusicLinkHtml(song);
+
                 item.innerHTML = `
                     <div class="custom-checkbox"></div>
                     <div class="song-meta">
                         <div class="song-title">${escapeHtml(sTitle)}</div>
                         <div class="song-artist">${escapeHtml(sArtist)}</div>
                     </div>
+                    ${spotifyHtml}
                     <span class="song-album-tag">${escapeHtml(sAlbum)}</span>
                     <span class="played-badge">${badgeText}</span>
                 `;
 
-                item.addEventListener('click', () => toggleSong(song.id, item));
+                item.addEventListener('click', (e) => {
+                    if (e.target.closest('.spotify-btn')) return;
+                    toggleSong(song.id, item);
+                });
                 $songList.appendChild(item);
             });
 
@@ -1692,6 +1742,22 @@
             const div = document.createElement('div');
             div.textContent = str;
             return div.innerHTML;
+        }
+
+        function getMusicLinkHtml(song, additionalStyles = '') {
+            if (!song.spotifyUrl) return '';
+            
+            const isSoundCloud = song.spotifyUrl.includes('soundcloud.com');
+            const platformName = isSoundCloud ? 'SoundCloud' : 'Spotify';
+            const extraClass = isSoundCloud ? ' soundcloud' : '';
+            
+            const spotifySvg = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.422c-.172.28-.535.374-.816.202-2.235-1.365-5.05-1.674-8.366-.917-.315.072-.633-.125-.706-.44-.072-.315.125-.632.44-.705 3.616-.826 6.745-.48 9.246 1.044.28.172.374.536.202.816zm1.168-2.616c-.218.353-.678.473-1.032.255-2.553-1.568-6.44-2.016-9.698-1.102-.403.113-.815-.122-.928-.525-.113-.404.122-.815.525-.928 3.738-1.047 8.03-.545 10.96 1.258.353.218.473.678.254 1.03l-.08.112zm.108-2.735c-3.05-1.81-8.11-1.977-11.035-1.09-.48.145-.984-.127-1.13-.607-.145-.48.127-.984.607-1.13 3.42-1.035 9.043-.847 12.607 1.27.433.256.577.818.32 1.25-.256.434-.818.577-1.25.32l-.12-.013z"/></svg>`;
+            
+            const soundcloudSvg = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M11.082 12.333c-.105 0-.191.073-.191.161v4.757c0 .088.087.161.191.161s.192-.073.192-.161v-4.757c0-.089-.087-.161-.192-.161zm-1.264.441c-.097 0-.175.066-.175.145v3.834c0 .079.078.145.175.145.097 0 .175-.066.175-.145v-3.834c0-.079-.079-.145-.175-.145zm-1.264.425c-.096 0-.174.065-.174.143v3.136c0 .079.078.143.174.143.097 0 .174-.064.174-.143v-3.136c0-.077-.078-.143-.174-.143zm-1.263.662c-.098 0-.178.064-.178.141v2.105c0 .078.08.141.178.141.097 0 .176-.063.176-.141v-2.105c0-.077-.079-.141-.176-.141zm-1.262.336c-.098 0-.176.064-.176.142v1.543c0 .078.078.141.176.141.097 0 .176-.063.176-.141v-1.543c0-.078-.079-.142-.176-.142zm-1.263.43c-.098 0-.176.064-.176.141v.834c0 .079.078.141.176.141.097 0 .176-.062.176-.141v-.834c0-.078-.079-.141-.176-.141zm10.015-3.329c-.106 0-.193.072-.193.161v5.62c0 .088.087.161.193.161.106 0 .193-.073.193-.161v-5.62c0-.089-.087-.161-.193-.161zm1.264-.197c-.105 0-.191.073-.191.161v5.922c0 .09.086.161.191.161.107 0 .193-.072.193-.161v-5.922c0-.088-.086-.161-.193-.161zm2.464-.093c-1.393.007-2.61.802-3.17 1.956-.251-.818-.621-1.22-.621-1.22-.1-.086-.109-.084-.337-.084h-.116c-.106 0-.193.073-.193.161v6.79c0 .088.087.161.193.161 1.666 0 6.136.009 6.66-.008 2.186-.084 3.791-1.83 3.791-3.955 0-2.115-1.597-3.856-3.77-3.955-.178-.01-.358-.007-.534.004-.325-1.662-1.776-2.932-3.525-2.955z"/></svg>`;
+            
+            const iconSvg = isSoundCloud ? soundcloudSvg : spotifySvg;
+
+            return `<a href="${song.spotifyUrl}" target="_blank" class="spotify-btn${extraClass}" style="${additionalStyles}" aria-label="Listen on ${platformName}" title="Listen on ${platformName}">${iconSvg}</a>`;
         }
 
         /* ============================================
@@ -1725,7 +1791,7 @@
 
             $modalConcertSelect.innerHTML = '<option value="" disabled selected>-- Select a Past Show --</option>';
             const now = new Date();
-            
+
             CONCERTS.forEach((show, index) => {
                 const showTime = getConcertTime(show.date, show.city);
                 if (showTime < now) {
@@ -1743,30 +1809,30 @@
         }
 
         $modalSaveBtn.addEventListener('click', () => {
-             const selectedIdx = parseInt($modalConcertSelect.value);
-             if (isNaN(selectedIdx)) {
-                 showToast("Please select a valid concert show!");
-                 return;
-             }
-             
-             let existingCount = 0;
-             const existingSongs = [];
-             playedMap.forEach((cIdx, sId) => {
-                 if (cIdx === selectedIdx) {
-                     existingCount++;
-                     existingSongs.push(sId);
-                 }
-             });
+            const selectedIdx = parseInt($modalConcertSelect.value);
+            if (isNaN(selectedIdx)) {
+                showToast("Please select a valid concert show!");
+                return;
+            }
 
-             if (existingCount >= 2) {
-                 triggerReplacementFlow(selectedIdx, existingSongs);
-             } else {
-                 confirmPlayedState(selectedIdx);
-             }
+            let existingCount = 0;
+            const existingSongs = [];
+            playedMap.forEach((cIdx, sId) => {
+                if (cIdx === selectedIdx) {
+                    existingCount++;
+                    existingSongs.push(sId);
+                }
+            });
+
+            if (existingCount >= 2) {
+                triggerReplacementFlow(selectedIdx, existingSongs);
+            } else {
+                confirmPlayedState(selectedIdx);
+            }
         });
 
         $modalSkipBtn.addEventListener('click', () => {
-             confirmPlayedState(-1); // -1 = Unknown
+            confirmPlayedState(-1); // -1 = Unknown
         });
 
         $modalReplaceCancelBtn.addEventListener('click', () => {
@@ -1774,30 +1840,40 @@
             $modalViewSelect.style.display = 'block';
         });
 
-        function triggerReplacementFlow(concertIdx, existingSongIds) {
-             const concert = CONCERTS[concertIdx];
-             $modalReplaceCity.textContent = concert.city;
-             
-             $modalReplaceOptions.innerHTML = '';
-             existingSongIds.forEach(id => {
-                 const s = SONGS.find(x => x.id === id);
-                 const btn = document.createElement('button');
-                 btn.className = 'btn-replace-song';
-                 btn.innerHTML = `Replace <strong>${escapeHtml(s.title)}</strong>`;
-                 btn.addEventListener('click', () => {
-                      playedMap.delete(id); // uncheck old song completely
-                      confirmPlayedState(concertIdx);
-                 });
-                 $modalReplaceOptions.appendChild(btn);
-             });
+        $modalCloseBtn.addEventListener('click', () => {
+            $concertModal.classList.remove('active');
+        });
 
-             $modalViewSelect.style.display = 'none';
-             $modalViewReplace.style.display = 'block';
+        $concertModal.addEventListener('click', (e) => {
+            if (e.target === $concertModal) {
+                $concertModal.classList.remove('active');
+            }
+        });
+
+        function triggerReplacementFlow(concertIdx, existingSongIds) {
+            const concert = CONCERTS[concertIdx];
+            $modalReplaceCity.textContent = concert.city;
+
+            $modalReplaceOptions.innerHTML = '';
+            existingSongIds.forEach(id => {
+                const s = SONGS.find(x => x.id === id);
+                const btn = document.createElement('button');
+                btn.className = 'btn-replace-song';
+                btn.innerHTML = `Replace <strong>${escapeHtml(s.title)}</strong>`;
+                btn.addEventListener('click', () => {
+                    playedMap.delete(id); // uncheck old song completely
+                    confirmPlayedState(concertIdx);
+                });
+                $modalReplaceOptions.appendChild(btn);
+            });
+
+            $modalViewSelect.style.display = 'none';
+            $modalViewReplace.style.display = 'block';
         }
 
         function confirmPlayedState(concertIndex) {
             playedMap.set(targetSongIdForModal, concertIndex);
-            
+
             targetElementForModal.classList.add('checked');
             if (userDreamSongs.has(targetSongIdForModal)) {
                 userDreamSongs.delete(targetSongIdForModal);
@@ -1805,7 +1881,7 @@
             }
 
             $concertModal.classList.remove('active');
-            
+
             saveState();
             updateCounter();
             populateDreamSelect();
@@ -1813,48 +1889,51 @@
             calculateFutureOdds();
             updateRandomizerState();
             renderTourHistory();
-            renderSongList($searchInput.value.trim()); 
+            renderSongList($searchInput.value.trim());
         }
 
         function renderTourHistory() {
-             if (playedMap.size === 0) {
-                 $tourHistoryContent.innerHTML = `
+            if (playedMap.size === 0) {
+                $tourHistoryContent.innerHTML = `
                     <div class="empty-state" style="margin-top:16px">
                         <div class="empty-icon">⏳</div>
                         <p>No songs played yet!</p>
                     </div>
                  `;
-                 return;
-             }
+                return;
+            }
 
-             const historyGroups = {}; 
-             const unknownSongs = [];
+            const historyGroups = {};
+            const unknownSongs = [];
 
-             playedMap.forEach((cIndex, songId) => {
-                 if (cIndex === -1) {
-                     unknownSongs.push(songId);
-                 } else {
-                     if (!historyGroups[cIndex]) historyGroups[cIndex] = [];
-                     historyGroups[cIndex].push(songId);
-                 }
-             });
+            playedMap.forEach((cIndex, songId) => {
+                if (cIndex === -1) {
+                    unknownSongs.push(songId);
+                } else {
+                    if (!historyGroups[cIndex]) historyGroups[cIndex] = [];
+                    historyGroups[cIndex].push(songId);
+                }
+            });
 
-             let html = '<div class="history-timeline">';
+            let html = '<div class="history-timeline">';
 
-             const sortedConcertIdxs = Object.keys(historyGroups).map(k => parseInt(k)).sort((a,b) => b - a);
+            const sortedConcertIdxs = Object.keys(historyGroups).map(k => parseInt(k)).sort((a, b) => b - a);
 
-             sortedConcertIdxs.forEach(cIdx => {
-                  const show = CONCERTS[cIdx];
-                  const [yyyy, mm, dd] = show.date.split("-");
-                  const dateStr = new Date(yyyy, mm - 1, dd).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                  
-                  let songsHtml = '';
-                  historyGroups[cIdx].forEach(sId => {
-                       const s = SONGS.find(x => x.id === sId);
-                       if (s) songsHtml += `<span>🎶 ${escapeHtml(s.title)}</span>`;
-                  });
+            sortedConcertIdxs.forEach(cIdx => {
+                const show = CONCERTS[cIdx];
+                const [yyyy, mm, dd] = show.date.split("-");
+                const dateStr = new Date(yyyy, mm - 1, dd).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-                  html += `
+                let songsHtml = '';
+                historyGroups[cIdx].forEach(sId => {
+                    const s = SONGS.find(x => x.id === sId);
+                    if (s) {
+                        const spotifyHtml = getMusicLinkHtml(s, 'width:24px; height:24px; margin-left:auto;');
+                        songsHtml += `<div style="display:flex; align-items:center; gap:8px;"><span>🎶 ${escapeHtml(s.title)}</span> ${spotifyHtml}</div>`;
+                    }
+                });
+
+                html += `
                       <div class="history-item">
                           <div class="history-header">
                               <span>${show.city}</span>
@@ -1863,15 +1942,18 @@
                           <div class="history-songs">${songsHtml}</div>
                       </div>
                   `;
-             });
+            });
 
-             if (unknownSongs.length > 0) {
-                  let unkHtml = '';
-                  unknownSongs.forEach(sId => {
-                       const s = SONGS.find(x => x.id === sId);
-                       if (s) unkHtml += `<span>🎶 ${escapeHtml(s.title)}</span>`;
-                  });
-                  html += `
+            if (unknownSongs.length > 0) {
+                let unkHtml = '';
+                unknownSongs.forEach(sId => {
+                    const s = SONGS.find(x => x.id === sId);
+                    if (s) {
+                        const spotifyHtml = getMusicLinkHtml(s, 'width:24px; height:24px; margin-left:auto;');
+                        unkHtml += `<div style="display:flex; align-items:center; gap:8px;"><span>🎶 ${escapeHtml(s.title)}</span> ${spotifyHtml}</div>`;
+                    }
+                });
+                html += `
                       <div class="history-item" style="border-color: rgba(255,255,255,0.05); background: transparent;">
                           <div class="history-header" style="color:var(--text-muted)">
                               <span>Unknown Concert</span>
@@ -1879,10 +1961,10 @@
                           <div class="history-songs" style="color:var(--text-muted)">${unkHtml}</div>
                       </div>
                   `;
-             }
+            }
 
-             html += '</div>';
-             $tourHistoryContent.innerHTML = html;
+            html += '</div>';
+            $tourHistoryContent.innerHTML = html;
         }
 
         /* ============================================
@@ -1910,7 +1992,7 @@
                 const totalCombos = combinations(N, 2);
                 const failCombos = combinations(N - k, 2);
                 probAtLeastOne = (1 - (failCombos / totalCombos)) * 100;
-                
+
                 if (k >= 2) {
                     const bothCombos = combinations(k, 2);
                     probBoth = (bothCombos / totalCombos) * 100;
@@ -1921,7 +2003,7 @@
 
             const clampedProb1 = Math.min(probAtLeastOne, 100);
             const clampedProb2 = Math.min(probBoth, 100);
-            
+
             let html = `
                 <div style="display:flex; flex-direction:column; gap:12px; width:100%;">
                     <div>
@@ -1933,7 +2015,7 @@
                         </div>
                     </div>
             `;
-            
+
             if (k >= 2) {
                 html += `
                     <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;">
@@ -1962,24 +2044,24 @@
         const CITY_TZ = {
             "GOYANG": "+09:00",
             "TOKYO": "+09:00",
-            "TAMPA": "-04:00", 
-            "EL PASO": "-06:00", 
+            "TAMPA": "-04:00",
+            "EL PASO": "-06:00",
             "MEXICO CITY": "-06:00",
-            "STANFORD": "-07:00", 
-            "LAS VEGAS": "-07:00", 
+            "STANFORD": "-07:00",
+            "LAS VEGAS": "-07:00",
             "BUSAN": "+09:00",
-            "MADRID": "+02:00", 
-            "BRUSSELS": "+02:00", 
-            "LONDON": "+01:00", 
-            "MUNICH": "+02:00", 
-            "PARIS": "+02:00", 
-            "EAST RUTHERFORD": "-04:00", 
-            "FOXBOROUGH": "-04:00", 
-            "BALTIMORE": "-04:00", 
-            "ARLINGTON": "-05:00", 
-            "TORONTO": "-04:00", 
-            "CHICAGO": "-05:00", 
-            "LOS ANGELES": "-07:00", 
+            "MADRID": "+02:00",
+            "BRUSSELS": "+02:00",
+            "LONDON": "+01:00",
+            "MUNICH": "+02:00",
+            "PARIS": "+02:00",
+            "EAST RUTHERFORD": "-04:00",
+            "FOXBOROUGH": "-04:00",
+            "BALTIMORE": "-04:00",
+            "ARLINGTON": "-05:00",
+            "TORONTO": "-04:00",
+            "CHICAGO": "-05:00",
+            "LOS ANGELES": "-07:00",
             "BOGOTA": "-05:00",
             "LIMA": "-05:00",
             "SANTIAGO": "-03:00",
@@ -1990,12 +2072,12 @@
             "KUALA LUMPUR": "+08:00",
             "SINGAPORE": "+08:00",
             "JAKARTA": "+07:00",
-            "MELBOURNE": "+11:00", 
-            "SYDNEY": "+11:00", 
+            "MELBOURNE": "+11:00",
+            "SYDNEY": "+11:00",
             "HONG KONG": "+08:00",
             "MANILA": "+08:00"
         };
-        
+
         function getConcertTime(dateStr, city, time = "19:00:00") {
             const tz = CITY_TZ[city] || "+00:00";
             return new Date(`${dateStr}T${time}${tz}`);
@@ -2042,7 +2124,7 @@
             }
 
             const unplayedCount = getUnplayedCount();
-            
+
             const userShowTime = getConcertTime(CONCERTS[selectedShowIndex].date, CONCERTS[selectedShowIndex].city);
             const now = new Date();
 
@@ -2066,7 +2148,7 @@
                 const safeMCombos = combinations(N - k, m);
                 heartbreakP = (1 - (safeMCombos / totalMCombos)) * 100;
             }
-            
+
             $heartbreakStat.textContent = Math.min(heartbreakP, 100).toFixed(2) + "%";
 
             const remainingAfterShows = N - m;
@@ -2075,17 +2157,17 @@
             if (remainingAfterShows < 2) {
                 $hypeStat.textContent = "N/A";
                 if (remainingAfterShows === 1) {
-                   const hypeP1 = (k >= 1) ? 100 : 0;
-                   $hypeStat.textContent = Math.min(hypeP1, 100).toFixed(2) + "%";
+                    const hypeP1 = (k >= 1) ? 100 : 0;
+                    $hypeStat.textContent = Math.min(hypeP1, 100).toFixed(2) + "%";
                 } else {
-                   $futureShowsCount.textContent = "Pool exhausted before your date!";
+                    $futureShowsCount.textContent = "Pool exhausted before your date!";
                 }
             } else {
                 const totalCombos = combinations(remainingAfterShows, 2);
                 const failCombos = combinations(remainingAfterShows - k, 2);
                 const hypeP1 = (1 - (failCombos / totalCombos)) * 100;
                 $hypeStat.textContent = Math.min(hypeP1, 100).toFixed(2) + "%";
-                
+
                 if (k >= 2) {
                     const hypeP2 = (combinations(k, 2) / totalCombos) * 100;
                     $hypeBothStat.textContent = "Both: " + Math.min(hypeP2, 100).toFixed(2) + "%";
@@ -2119,6 +2201,8 @@
 
             $randomResults.innerHTML = '';
             pair.forEach((song, i) => {
+                const spotifyHtml = getMusicLinkHtml(song, 'margin-left: auto;');
+
                 const card = document.createElement('div');
                 card.className = 'random-song-card';
                 card.innerHTML = `
@@ -2127,6 +2211,7 @@
                         <div class="rs-title">${escapeHtml(song.title)}</div>
                         <div class="rs-artist">${escapeHtml(song.artist)} · ${escapeHtml(song.album)}</div>
                     </div>
+                    ${spotifyHtml}
                 `;
                 $randomResults.appendChild(card);
             });
